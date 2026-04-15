@@ -1,0 +1,9 @@
+{
+  "name": "Phone Control Hub",
+  "description": "A smart dashboard to monitor and interact with your device features using Web APIs, AI, and MiniMax video generation.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}
