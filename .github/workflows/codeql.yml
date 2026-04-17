@@ -1,4 +1,4 @@
-name: PhoneControlHub-Final-APK-Generator
+name: PhoneControlHub-Final-Success-APK
 
 on:
   push:
@@ -21,36 +21,36 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Rebuild Android Environment
-        # هذا القسم يحل مشكلة "Project with path :capacitor-android could not be found"
+      - name: Install Tools & Dependencies
         run: |
+          npm install -g typescript
           npm install --legacy-peer-deps
           npm install @capacitor/cli@latest @capacitor/android@latest @capacitor/core@latest typescript
           rm -rf android
           npx cap add android
 
-      - name: Prepare Web Assets
+      - name: Build Web & Sync
         run: |
-          # بناء ملفات الويب المطلوبة لتشغيل التطبيق داخل الـ APK
           mkdir -p dist
           echo "<html><body>Phone Control Hub Build</body></html>" > dist/index.html
           npx cap sync android
 
-      - name: Setup Java JDK 17
+      - name: Setup Java JDK 21
+        # قمنا بتغيير الإصدار إلى 21 لحل خطأ "invalid source release"
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
 
-      - name: Generate Final APK
+      - name: Build Final APK
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
 
-      - name: Download Your APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: PhoneControlHub-Final-Release
+          name: PhoneControlHub-Ready-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           
